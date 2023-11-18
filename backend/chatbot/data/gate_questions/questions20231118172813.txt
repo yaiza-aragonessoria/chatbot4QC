@@ -1,0 +1,6 @@
+1	draw a phase gate of pi/2
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
