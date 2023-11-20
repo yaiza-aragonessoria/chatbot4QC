@@ -203,9 +203,7 @@ class BertTextClassifier:
             self.starting_epoch = 0
         else:
             if path_to_model:
-                print("path_to_model", path_to_model)
                 if os.path.isfile(path_to_model):
-                    print("path_to_model", path_to_model)
                     self.pretrained_model = torch.load(path_to_model, map_location=map_location)
 
                     if self.pretrained_model:

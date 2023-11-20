@@ -1,10 +1,13 @@
 import datetime
 import os
+import sys
+
 import torch
 import math
 pi=math.pi
 PI=math.pi
 
+sys.path.append( os.path.dirname( os.path.dirname( os.path.abspath(__file__) ) ) )
 import chatbot.logic_engine as le
 from chatbot.LLM import BertTextClassifier
 from chatbot.LLM_QA import BertQA
@@ -41,7 +44,7 @@ class FileManager:
 # Define a class for calculating Levenshtein distance
 class LevenshteinDistance:
     @staticmethod
-    def calculate_distance(s1, s2, max_distance=3):
+    def calculate_distance(s1, s2):
         # Calculate the Levenshtein distance between two strings
         N, M = len(s1), len(s2)
         dp = [[0 for i in range(M + 1)] for j in range(N + 1)]

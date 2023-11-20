@@ -26,10 +26,7 @@ class Gate:
         return circ
 
     def draw(self):
-        if self.n_qubits == 1:
-            circ = self.apply(qubit=0)
-        else:
-            circ = self.apply()
+        circ = self.apply(qubit=0)
 
         current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
@@ -38,25 +35,11 @@ class Gate:
 
         return current_date
 
-    def compute_state(self, initial_state=None):
-        if self.n_qubits == 1:
-            if not initial_state:
-                state = Statevector([1, 0])
-            else:
-                state = Statevector(initial_state)
+    def compute_state(self, initial_state=Statevector([1, 0])):
+        circ = self.apply(0)
 
-            circ = self.apply(0)
-
-        else:
-            if not initial_state:
-                state=Statevector([1, 0, 0, 0])
-            else:
-                state = Statevector(initial_state)
-
-            circ = self.apply()
-
-            # Set the initial state of the simulator to the ground state using from_int
-            state = Statevector(state)
+        # Set the initial state of the simulator to the ground state using from_int
+        state = Statevector(initial_state)
 
         # Evolve the state by the quantum circuit
         state = state.evolve(circ)
@@ -270,23 +253,7 @@ for gate_key in gate_for_names.keys():
     if gate.alternative_names:
         gate_names.extend(gate.alternative_names)
 
-initial_states = {'|0>': Statevector([1,0]),
-                  '|1>': Statevector([0,1]),
-                  '|+>': Statevector([1/np.sqrt(2), 1/np.sqrt(2)]),
-                  '|->': Statevector([1/np.sqrt(2), -1/np.sqrt(2)]),
-                  '|r>': Statevector([1/np.sqrt(2), complex(1/np.sqrt(2) * 1j)]),
-                  '|l>': Statevector([1/np.sqrt(2), complex(-1/np.sqrt(2) * 1j)]),
-                  '|00>': Statevector([1, 0, 0, 0]),
-                  '|01>': Statevector([0, 1, 0, 0]),
-                  '|10>': Statevector([0, 0, 1, 0]),
-                  '|11>': Statevector([0, 0, 0, 1]),
-                  '|ϕ+>': Statevector([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)]),
-                  '|phi+>': Statevector([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)]),
-                  '|ψ+>': Statevector([0, 1/np.sqrt(2), 1/np.sqrt(2), 0]),
-                  '|psi+>': Statevector([0, 1/np.sqrt(2), 1/np.sqrt(2), 0]),
-                  '|ψ->': Statevector([0, 1/np.sqrt(2), -1/np.sqrt(2), 0]),
-                  '|psi->': Statevector([0, 1/np.sqrt(2), -1/np.sqrt(2), 0]),
-                  }
+initial_states = {'|0>': Statevector([1,0]), '|1>': Statevector([0,1]), '|+>': Statevector([1/np.sqrt(2), 1/np.sqrt(2)]), '|->': Statevector([1/np.sqrt(2), -1/np.sqrt(2)]), '|ϕ+>': Statevector([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)])}
 # initial_states = ['|0>', '|1>', '|+>', '|->', '|ϕ+>']
 
 if __name__ == '__main__':

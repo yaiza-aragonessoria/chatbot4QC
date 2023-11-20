@@ -4,3 +4,17 @@
 0	explain the rotation gate
 0	explain the rotation gate
 0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+0	explain the rotation gate
+1	draw a hadamard
+0	define the rotation gate
+0	define the rotation gate
+0	define the pauli z matrix
+2	apply the rotation of pi/2 on |0>
+2	apply the rotation of pi/2 on |0>
+2	apply the rotation of pi/2 on |0>
+2	apply the rotation of pi/2 on |0>
