@@ -1,0 +1,3 @@
+0	define the swap
+1	draw the swap
+2	apply pauli x

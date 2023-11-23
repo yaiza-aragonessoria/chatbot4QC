@@ -1,0 +1,23 @@
+1	draw a pauli y
+1	draw a pauli y
+0	define pauli x
+2	apply a pauli x on |1>
+2	apply a pauli x
+0	define a cnot
+2	apply a swap on |01>
+2	apply a phase gate of pi/4 on |1>
+2	apply a phase gate
+2	apply a phase gate on |1>
+2	apply a phase gate of pi on |1>
+2	apply a phase gate of pi/4 on |1>
+2	apply a phase gate of pi/4 on |1>
+2	apply a phase gate of pi/4 on |1>
+2	apply a phase gate of pi/4 on |1>
+2	apply a phase gate of pi/4 on |1>
+0	define a pauli x
+0	define pauli x
+0	define pauli x
+0	define a pauli x
+2	apply a pauli x
+2	apply a hadamard
+2	apply a hadamard

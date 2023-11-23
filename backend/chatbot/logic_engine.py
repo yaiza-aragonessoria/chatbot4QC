@@ -1,3 +1,5 @@
+import os
+
 import qiskit as qiskit
 import matplotlib.pyplot as plt
 from qiskit.quantum_info import Statevector
@@ -33,8 +35,12 @@ class Gate:
 
         current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
-        circ.draw(output='mpl').savefig(f"/app/backend/media-files/qiskit_draws/{current_date}.svg")
-        plt.show()
+
+        qiskit_draws_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/media-files/qiskit_draws/"
+        print("qiskit_draws_dir ", qiskit_draws_dir)
+
+        circ.draw(output='mpl').savefig(qiskit_draws_dir + f"{current_date}.svg")
+        # plt.show()
 
         return current_date
 
@@ -64,35 +70,6 @@ class Gate:
         # draw using text
         return state.draw(output='text')
 
-class UGate(Gate):
-    def __init__(self, theta, phi, lam,
-                 name='single-qubit unitary',
-                 alternative_names=('single-qubit gate', '1-qubit unitary',
-                                    '1-qubit gate', 'one-qubit unitary',
-                                    'one-qubit gate', 'single qubit unitary',
-                                    'single qubit gate', '1 qubit unitary',
-                                    '1 qubit gate', 'one qubit unitary', 'one qubit gate'),
-                 n_qubits=1,
-                 definition='A general single-qubit gate can be parametrised as U(\u03B8, \u03C6, \u03BB) = {{cos('
-                            '\u03B8/2), -e^(i\u03BB)sin(\u03B8/2)}, {e^(i\u03C6)sin(\u03B8/2), '
-                            'e^(i(\u03C6+\u03BB)cos(\u03B8/2)}, where 0 <= \u03B8 <= \u03C0, 0 <= \u03C6 < 2\u03C0, '
-                            '0 <= \u03BB < 2\u03C0. In other words, a general unitary gate maps the basis states |0> '
-                            '--> cos(\u03B8/2)|0> and |1> --> e^(i\u03C6)sin(\u03B8/2)|1>.',
-                 qiskit_name='u'):
-        super().__init__(name, n_qubits, definition, qiskit_name, alternative_names)
-        self.theta = theta
-        self.phi = phi
-        self.lam = lam
-
-    def apply(self, qubit, circ=None):
-        if not circ:
-            circ = qiskit.QuantumCircuit(self.n_qubits)
-        qiskit_function = getattr(circ, self.qiskit_name)
-        qiskit_function(self.theta, self.phi, self.lam, qubit)
-
-        return circ
-
-
 class PhaseGate(Gate):
     def __init__(self, phase_shift,
                  name='phase gate',
@@ -117,6 +94,40 @@ class RX(Gate):
                  n_qubits=1,
                  definition='The quantum gate Rx(\u03B8) is a single-qubit operation that performs a rotation of \u03B8 radians around the x-axis.',
                  qiskit_name='rx'):
+        super().__init__(name, n_qubits, definition, qiskit_name, alternative_names)
+        self.angle = angle
+
+    def apply(self, qubit=0):
+        circ = qiskit.QuantumCircuit(self.n_qubits)
+        qiskit_function = getattr(circ, self.qiskit_name)
+        qiskit_function(self.angle, qubit)  # maybe later we need a parameter for the qubit where the gate is applied
+
+        return circ
+
+class RY(Gate):
+    def __init__(self, angle,
+                 name='rotation around y',
+                 alternative_names=('RY',),
+                 n_qubits=1,
+                 definition='The quantum gate Ry(\u03B8) is a single-qubit operation that performs a rotation of \u03B8 radians around the y-axis.',
+                 qiskit_name='ry'):
+        super().__init__(name, n_qubits, definition, qiskit_name, alternative_names)
+        self.angle = angle
+
+    def apply(self, qubit=0):
+        circ = qiskit.QuantumCircuit(self.n_qubits)
+        qiskit_function = getattr(circ, self.qiskit_name)
+        qiskit_function(self.angle, qubit)  # maybe later we need a parameter for the qubit where the gate is applied
+
+        return circ
+
+class RZ(Gate):
+    def __init__(self, angle,
+                 name='rotation around z',
+                 alternative_names=('RZ',),
+                 n_qubits=1,
+                 definition='The quantum gate Rz(\u03B8) is a single-qubit operation that performs a rotation of \u03B8 radians around the z-axis.',
+                 qiskit_name='rz'):
         super().__init__(name, n_qubits, definition, qiskit_name, alternative_names)
         self.angle = angle
 
@@ -156,7 +167,6 @@ class CZ(Gate):
                  definition='The controlled phase, (CZ) gate is a two-qubit gate that applies a Pauli Z on the target '
                             'qubit state if and only if the control qubit |1>. Otherwise, the target qubit is '
                             'unchanged.',
-                 alternative_names=('control z',),
                  ):
         super().__init__(name, n_qubits, definition, qiskit_name)
         self.control_qubit = control_qubit
@@ -250,15 +260,9 @@ cnot = CNOT(0, 1)
 cz = CZ(1, 0)
 swap = Swap(0, 1)
 
-# gates = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, hadamard.name: hadamard, phasePI2.name: phasePI2, cnot.name: cnot, cz.name: cz, swap.name: swap}
 gates = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, hadamard.name: hadamard,
          s.name: s, sdg.name: sdg, phasePI2.name: PhaseGate, cnot.name: cnot, cz.name: cz, swap.name: swap,
-         'rotation': {'RX': RX, 'RY': RX, 'RZ': RX,}, 'phase': PhaseGate}
-
-
-# gates_for_names = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, s.name: s,
-#                    sdg.name: sdg, hadamard.name: hadamard, phasePI2.name: phasePI2,
-#                    cnot.name: cnot, cz.name: cz, swap.name: swap, 'rotation': RXPI}
+         'rotation': {'RX': RX, 'RY': RY, 'RZ': RZ,}, 'phase': PhaseGate}
 
 gate_for_names = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, s.name: s,
                    sdg.name: sdg, hadamard.name: hadamard, phasePI2.name: phasePI2,
@@ -287,7 +291,6 @@ initial_states = {'|0>': Statevector([1,0]),
                   '|ψ->': Statevector([0, 1/np.sqrt(2), -1/np.sqrt(2), 0]),
                   '|psi->': Statevector([0, 1/np.sqrt(2), -1/np.sqrt(2), 0]),
                   }
-# initial_states = ['|0>', '|1>', '|+>', '|->', '|ϕ+>']
 
 if __name__ == '__main__':
     # r_class = gates.get('RX')

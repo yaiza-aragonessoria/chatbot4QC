@@ -15,3 +15,21 @@
 1	draw a swap
 2	apply a phase gate
 1	draw a phase gate of pi
+2	apply a pauli x
+2	apply a pauli x
+1	draw a pauli x
+0	define a pauli x
+1	draw a pauli x
+2	apply a pauli x on |1>
+2	apply a pauli x
+0	define a phase gate of pi
+1	draw a phase gate of pi/2
+2	apply a phase gate of pi/2 on |1>
+2	apply a phase gate of pi on |1>
+1	draw a cnot
+1	draw a pauli z
+0	define the swap gate
+2	apply the pauli x
+2	apply a pauli x
+2	apply a pauli x
+2	apply a pauli x

@@ -1,4 +1,7 @@
 import json
+import os
+import sys
+
 from simpletransformers.question_answering import QuestionAnsweringModel, QuestionAnsweringArgs
 import time
 
@@ -64,6 +67,9 @@ class BertQA:
         self.model.train_model(train_data, eval_data=test_data)
 
     def load_saved_model(self, model_path="/app/backend/chatbot/LLM_QA/bert/best_model"):
+        model_path = os.path.dirname(os.path.abspath(__file__)) + "/LLM_QA/bert/best_model"
+        print("model_path =", model_path)
+
         self.model = QuestionAnsweringModel("bert", model_path, use_cuda=False)
 
     def ask_questions(self, context, questions):

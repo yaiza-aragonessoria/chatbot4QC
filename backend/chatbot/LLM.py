@@ -223,7 +223,7 @@ class BertTextClassifier:
                 self.starting_epoch = 0
 
 
-    def train(self, train_from_scratch=True, path_to_model=None, map_location='cpu', data_path=None):
+    def train(self, train_from_scratch=True, path_to_model=None, map_location='cpu', data_path=None, save=True):
         if data_path:
             self.load_data(data_path)
             self.preprocess_data()
@@ -233,6 +233,9 @@ class BertTextClassifier:
             self.load_checkpoint(train_from_scratch, path_to_model, map_location)
 
             training_stats = []
+
+            print("starting_epoch ", self.starting_epoch)
+            print("epochs ", self.epochs)
 
             for epoch_i in range(self.starting_epoch, self.epochs):
                 total_train_loss = 0
@@ -281,15 +284,34 @@ class BertTextClassifier:
                     }
                 )
 
-            current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            LLM_file_name = f"quantum_LLM_{current_date}.pth"
+            if save:
+                current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+                LLM_file_name = f"quantum_LLM_{current_date}.pth"
+                directory = os.path.dirname(os.path.abspath(__file__)) + "/model/"
 
-            torch.save({
-                'num_labels': self.num_labels,
-                'epoch': epoch_i + 1,
-                'model_state_dict': self.model.state_dict(),
-                'optimizer_state_dict': self.optimizer.state_dict(),
-                'loss': training_loss,
-            }, '/app/backend/chatbot/model/'+LLM_file_name)
+                torch.save({
+                    'num_labels': self.num_labels,
+                    'epoch': epoch_i + 1,
+                    'model_state_dict': self.model.state_dict(),
+                    'optimizer_state_dict': self.optimizer.state_dict(),
+                    'loss': training_loss,
+                }, directory + LLM_file_name)
         else:
             print("Model couldn't train because no data was provided.")
+
+if __name__ == "__main__":
+    # PARAMETERS
+    data_path = './data/gate_questions/generated_questions.txt'
+    path_to_pretrained_model = './model/quantum_LLM.pth'
+    val_ratio = 0.2
+    batch_size = 16  # Recommended batch size: 16, 32. See: https://arxiv.org/pdf/1810.04805.pdf
+    epochs = 2  # Set the number of training epochs
+    batch_size = 32  # Set the batch size for the data loader
+    num_labels = 3
+
+    # logging.set_verbosity_info()
+
+    classifier = BertTextClassifier(val_ratio, batch_size, epochs, num_labels)
+    classifier.set_seed()
+    classifier.set_device()
+    classifier.train(data_path=data_path)

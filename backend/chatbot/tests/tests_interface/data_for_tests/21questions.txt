@@ -1,0 +1,25 @@
+2	apply the rotation of pi/2 on |0>
+2	apply the rotation of pi/2 on |0>
+2	apply the cnot on |10>
+2	apply the cnot
+2	apply the control z
+2	apply the swap
+2	apply the swap gate on |10>
+0	define the swap
+0	define the swap
+0	define the swap
+1	draw the swap
+2	apply pauli x
+1	draw a phase gate of pi
+1	draw a phase gate of pi
+2	apply a pauli x
+2	apply a pauli x
+1	draw a cnot
+1	draw a cnot
+1	draw a cnot
+1	draw a swap
+1	draw a swap
+2	apply a phase gate
+2	apply a phase gate
+1	draw a phase gate of pi
+1	draw a phase gate of pi
