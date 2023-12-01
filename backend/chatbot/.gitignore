@@ -1,0 +1,9 @@
+model/
+
+__pychache__/
+/.pytest_cache
+
+LLM_QA/
+quantum_LLM.pth
+tests/data_for_tests/LLM_QA
+

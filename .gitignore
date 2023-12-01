@@ -21,8 +21,14 @@ yarn-error.log*
 next-env.d.ts
 
 # Project specific
-/ollama/
-/models/
+backend/chatbot/model/
+backend/chatbot/LLM_QA/
+backend/chatbot/tests/data_for_tests/quantum_LLM.pth
+backend/chatbot/tests/data_for_tests/LLM_QA
+
+backend/chatbot/__pychache__/
+backend/chatbot/.pytest_cache
+
 
 # env files
 .env*
@@ -34,7 +40,3 @@ next-env.d.ts
 
 .idea
 
-backend/chatbot/model/
-backend/chatbot/LLM_QA/
-
-backend/chatbot/__pychache__/
