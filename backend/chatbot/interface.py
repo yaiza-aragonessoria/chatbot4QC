@@ -230,8 +230,6 @@ class Chatbot:
         logits = outputs.logits
         top_indices = torch.topk(logits, k=3).indices
         category = top_indices[0][0].item()  # Assuming you want the top predicted category
-        print(category, logits, top_indices)
-        print(category, type(logits), type(top_indices))
 
         return category, logits, top_indices
 
@@ -375,100 +373,6 @@ class Chatbot:
                     # parameters = [phase_shift] if gate_name == 'phase' else [angle, axis]
 
                 print(self.apply_gate_method(category, gate, parameters))
-
-    # def start(self):
-    #     while True:
-    #         # Prompt the user for a question
-    #         user_question = input("Enter your question (type 'exit' to quit): ")
-    #
-    #         # Check if the user wants to exit
-    #         if user_question.lower() == 'exit':
-    #             print("Exiting the chatbot.")
-    #             break
-    #
-    #         # Classify user input using BERT
-    #         category, logits, top_indices = self.classify_user_input(user_question)
-    #
-    #         i = 0
-    #         while logits[0][top_indices[0][i]].item() >= 0:
-    #             category = top_indices[0][i].item()
-    #
-    #             gate_name, initial_state_name, understood_question = self.process_user_question(user_question, category)
-    #             gate = self.gates.get(gate_name)
-    #             initial_state = self.initial_states.get(initial_state_name)
-    #
-    #             while True:
-    #                 # Ask the user for confirmation
-    #                 user_response = input(understood_question)
-    #
-    #                 if user_response.lower() == "yes" or user_response == '':
-    #                     print("Ok, let's do it!")
-    #
-    #                     # Append the user's question to a data file
-    #                     with open(self.file_manager.folder_path + self.file_manager.file_name, 'a') as file:
-    #                         file.write(f'{category}\t{user_question}' + '\n')
-    #
-    #                     break
-    #                 elif user_response.lower() == 'no':
-    #                     print("Ups... Let me try again.")
-    #                     i += 1
-    #                     break
-    #                 else:
-    #                     print("Please enter 'yes' or 'no' to confirm or deny the question.")
-    #
-    #             if user_response.lower() == 'yes' or user_response == '':
-    #                 break
-    #
-    #         if logits[0][top_indices[0][i]].item() <= 0:
-    #             print("Unfortunately I cannot understand your question. Please, try to ask it again giving more details.")
-    #
-    #
-    #         if user_response.lower() == 'yes' or user_response == '':
-    #             parameters = [initial_state]
-    #
-    #             if gate_name == 'phase':
-    #                 bert_qa = BertQA(train_from_scratch=False)
-    #                 bert_answer = bert_qa.ask_questions(user_question, ["What is the phase shift?"])
-    #                 if bert_answer:
-    #                     try:
-    #                         phase_shift = eval(bert_answer.get('What is the phase shift?').get('answer').get('answer')[0])
-    #                     except SyntaxError:
-    #                         print('Phase shift could not be read, and so an phase shift of zero radians was assumed.')
-    #                         phase_shift = 0
-    #                 else:
-    #                     phase_shift = 0
-    #                 gate = gate(phase_shift)
-    #             elif gate_name == 'rotation':
-    #                 bert_qa = BertQA(train_from_scratch=False)
-    #                 questions = ["What is the angle of the rotation?", "What is the axis of the rotation?"]
-    #                 bert_answer = bert_qa.ask_questions(context=user_question, questions=questions)
-    #                 if bert_answer:
-    #                     try:
-    #                         angle = eval(bert_answer.get(questions[0]).get('answer').get('answer')[0])
-    #                     except Exception:
-    #                         print('Rotation angle could not be read, and so an angle of zero radians was assumed.')
-    #                         angle = 0
-    #
-    #                     try:
-    #                         axis = bert_answer.get(questions[1]).get('answer').get('answer')[0].lower()
-    #                     except Exception:
-    #                         print('Rotation axis could not be read, and so the x-axis was assumed.')
-    #                         axis = 'x'
-    #                 else:
-    #                     print('Bert did not give any answer...')
-    #                     angle = 0
-    #
-    #                 axis_rotation_map = {'x': 'RX', 'y': 'RY', 'z': 'RZ'}
-    #                 gate_name = axis_rotation_map.get(axis)
-    #                 gate_object = gate.get(gate_name)
-    #                 if gate_object:
-    #                     gate = gate_object(angle)
-    #                 else:
-    #                     gate = self.gates.get('rotation').get('x')(0)
-    #
-    #             # Handle the user's question with the corresponding gate and initial state
-    #             answer_handler = AnswerHandler(category, gate, parameters)
-    #             print(answer_handler.apply_gate_method())
 
 
 if __name__ == "__main__":

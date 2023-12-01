@@ -2,6 +2,7 @@
 
 import datetime
 import os
+import random
 import sys
 import torch
 import pytest
@@ -41,14 +42,14 @@ def chatbot_test_data_fixture():
     chatbot_instance = interface.Chatbot(data_folder_path, le, save=False)
     checkpoint_path = checkpoint_folder_path + file_manager.file_name
     chatbot_instance.initialize(checkpoint_path, map_location='cpu', retraining_bound=20)
-    chatbot_instance.file_manager = interface.FileManager("./tests/tests_interface/data_for_tests/")
+    chatbot_instance.file_manager = interface.FileManager("./tests/data_for_tests/")
     return chatbot_instance
 
 
-chatbot_test_data = interface.Chatbot(data_folder_path="./tests/tests_interface/data_for_tests/", le=le, save=False)
+chatbot_test_data = interface.Chatbot(data_folder_path="./tests/data_for_tests/", le=le, save=False)
 # checkpoint_path = checkpoint_folder_path + file_manager.file_name
 # chatbot_instance.initialize(checkpoint_path, map_location='cpu', retraining_bound=20)
-chatbot_test_data.file_manager = interface.FileManager("./tests/tests_interface/data_for_tests/")
+chatbot_test_data.file_manager = interface.FileManager("./tests/data_for_tests/")
 chatbot_test_data.file_manager.get_latest_file()
 
 # Define a fixture to create a temporary folder for testing
@@ -101,7 +102,7 @@ def test_initialize_does_not_retrain_bert_model_when_file_not_present():
 
 
 def test_initialize_retraining_bound_exceeded(temp_folder, capsys):
-    with open("./tests/tests_interface/data_for_tests/21questions.txt", 'r+') as file:
+    with open("./tests/data_for_tests/21questions.txt", 'r+') as file:
         # Read all lines from the file
         lines = file.readlines()
 
@@ -130,7 +131,7 @@ def test_initialize_retraining_bound_exceeded(temp_folder, capsys):
 
 
 def test_initialize_retraining_bound_not_exceeded(temp_folder, capsys):
-    with open("./tests/tests_interface/data_for_tests/11questions.txt", 'r+') as file:
+    with open("./tests/data_for_tests/11questions.txt", 'r+') as file:
         # Read all lines from the file
         lines = file.readlines()
 
@@ -158,25 +159,22 @@ def test_initialize_retraining_bound_not_exceeded(temp_folder, capsys):
     assert "Improving chatbot..." not in captured.out
 
 
-def read_test_cases(file_path):
+def read_test_data(file_path, max_elements=None):
     with open(file_path, 'r') as file:
         lines = file.readlines()
-        test_cases = [line.strip().split('\t') for line in lines]
-    print(test_cases)
-    return test_cases
+        result = [line.strip().split('\t') for line in lines]
 
+    if max_elements:
+        # Shuffle the data
+        random.shuffle(result)
 
-# @pytest.mark.parametrize("expected_category", "input_question",
-#                          read_test_cases('./tests/tests_interface/data_for_tests/11questions.txt'))
+        # Extract the first 'max_elements' elements
+        result = result[:max_elements]
 
-@pytest.mark.parametrize("input_question, expected_category", [
-    ("apply pauli x", 2),
-    ("draw circuit result", 1),
-    ("define pauli x gate", 0),
-])
+    return result
+
+@pytest.mark.parametrize("expected_category, input_question", read_test_data("./tests/data_for_tests/for_test_generated_questions.txt", max_elements=5))
 def test_classify_user_input(chatbot_test_data_fixture, input_question, expected_category):
-    # checkpoint_path = checkpoint_folder_path + file_manager.file_name
-    # chatbot.initialize(checkpoint_path, map_location='cpu', retraining_bound=20)
     assert chatbot_test_data_fixture.classify_user_input(input_question)[0] == int(expected_category)
 
 

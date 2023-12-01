@@ -34,7 +34,6 @@ class BertTextClassifier:
         self.device = None
         self.train_dataloader = None
         self.val_dataloader = None
-        self.test_dataloader = None
         self.pretrained_model = None
         self.starting_epoch = None
 
@@ -42,12 +41,33 @@ class BertTextClassifier:
         self.create_model()
         self.create_optimizer()
 
+    def create_model(self):
+        # Create the BERT-based model for sequence classification
+        self.model = BertForSequenceClassification.from_pretrained(
+            "bert-base-uncased",
+            num_labels=self.num_labels,
+            output_attentions=False,
+            output_hidden_states=False,
+        )
+
+    def create_optimizer(self):
+        # Create an AdamW optimizer for training the model
+        self.optimizer = AdamW(self.model.parameters(), lr=2e-5, eps=1e-8)
+
     def set_seed(self, seed=42):
         # Set the random seed for reproducibility
         random.seed(seed)
         np.random.seed(seed)
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
+
+    def set_device(self):
+        # Set the device to CUDA (GPU) if available; otherwise, use CPU
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Move the model to the selected device (GPU or CPU)
+        self.model.to(self.device)
+
 
     def load_data (self, data_path):
         data = []
@@ -120,19 +140,6 @@ class BertTextClassifier:
             batch_size=self.batch_size
         )
 
-    def create_model(self):
-        # Create the BERT-based model for sequence classification
-        self.model = BertForSequenceClassification.from_pretrained(
-            "bert-base-uncased",
-            num_labels=self.num_labels,
-            output_attentions=False,
-            output_hidden_states=False,
-        )
-        
-    def create_optimizer(self):
-        # Create an AdamW optimizer for training the model
-        self.optimizer = AdamW(self.model.parameters(), lr=2e-5, eps=1e-8)
-
     def create_scheduler(self):
         # Create a linear learning rate scheduler with warm-up
         total_steps = len(self.train_dataloader) * self.epochs
@@ -142,12 +149,25 @@ class BertTextClassifier:
             num_training_steps=total_steps
         )
 
-    def set_device(self):
-        # Set the device to CUDA (GPU) if available; otherwise, use CPU
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    def load_checkpoint(self, train_from_scratch=True, path_to_model=None, map_location='cpu'):
+        if train_from_scratch:
+            self.starting_epoch = 0
+        else:
+            if path_to_model:
+                if os.path.isfile(path_to_model):
+                    self.pretrained_model = torch.load(path_to_model, map_location=map_location)
 
-        # Move the model to the selected device (GPU or CPU)
-        self.model.to(self.device)
+                    if self.pretrained_model:
+                        self.starting_epoch = 0
+                        self.model.load_state_dict(self.pretrained_model['model_state_dict'])
+                        self.optimizer.load_state_dict(self.pretrained_model['optimizer_state_dict'])
+                else:
+                    print('No saved model, so fine-tuning from scratch')
+                    self.starting_epoch = 0
+            else:
+                print('No path to model provided')
+                print('Fine-tuning from scratch')
+                self.starting_epoch = 0
 
     def evaluate(self, dataloader):
         # Evaluate the model's performance
@@ -197,31 +217,6 @@ class BertTextClassifier:
         pred_flat = np.argmax(preds, axis=1).flatten()
         labels_flat = labels.flatten()
         return np.sum(pred_flat == labels_flat) / len(labels_flat)
-
-    def load_checkpoint(self, train_from_scratch=True, path_to_model=None, map_location='cpu'):
-        if train_from_scratch:
-            self.starting_epoch = 0
-        else:
-            if path_to_model:
-                if os.path.isfile(path_to_model):
-                    self.pretrained_model = torch.load(path_to_model, map_location=map_location)
-
-                    if self.pretrained_model:
-                        self.starting_epoch = 0
-                        self.model.load_state_dict(self.pretrained_model['model_state_dict'])
-                        self.optimizer.load_state_dict(self.pretrained_model['optimizer_state_dict'])
-
-                        # if not self.starting_epoch:
-                        #     print('Starting epoch could not be found, so fine-tuning from scratch')
-                        #     self.starting_epoch = 0
-                else:
-                    print('No saved model, so fine-tuning from scratch')
-                    self.starting_epoch = 0
-            else:
-                print('No path to model provided')
-                print('Fine-tuning from scratch')
-                self.starting_epoch = 0
-
 
     def train(self, train_from_scratch=True, path_to_model=None, map_location='cpu', data_path=None, save=True):
         if data_path:
@@ -305,8 +300,8 @@ if __name__ == "__main__":
     path_to_pretrained_model = './model/quantum_LLM.pth'
     val_ratio = 0.2
     batch_size = 16  # Recommended batch size: 16, 32. See: https://arxiv.org/pdf/1810.04805.pdf
-    epochs = 2  # Set the number of training epochs
-    batch_size = 32  # Set the batch size for the data loader
+    epochs = 4  # Set the number of training epochs
+    # batch_size = 32  # Set the batch size for the data loader
     num_labels = 3
 
     # logging.set_verbosity_info()
@@ -314,4 +309,4 @@ if __name__ == "__main__":
     classifier = BertTextClassifier(val_ratio, batch_size, epochs, num_labels)
     classifier.set_seed()
     classifier.set_device()
-    classifier.train(data_path=data_path)
+    classifier.train(train_from_scratch=True, data_path=data_path, path_to_model=None, save=True)
