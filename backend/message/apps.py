@@ -1,6 +1,28 @@
 from django.apps import AppConfig
-
+from chatbot.interface import Chatbot, FileManager
+import chatbot.logic_engine as le
+from chatbot.LLM_QA import BertQA
 
 class MessageConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'message'
+
+    # Create an instance of the Chatbot class, passing the data folder path
+    data_folder_path = './data/gate_questions/'
+    chatbot = Chatbot(data_folder_path, le)
+
+    # Initialize the chatbot with the specified checkpoint file
+    data_folder_path = './chatbot/data/gate_questions/'
+    classifbert = Chatbot(data_folder_path, le)
+
+    # Initialize the chatbot with the specified checkpoint file
+    checkpoint_folder_path = '/app/backend/chatbot/model/'
+    file_manager = FileManager(checkpoint_folder_path)
+    file_manager.get_latest_file()
+
+    checkpoint_path = checkpoint_folder_path + file_manager.file_name
+
+    classifbert.initialize(checkpoint_path, map_location='cpu', retraining_bound=20)
+
+    bert_qa = BertQA(train_from_scratch=False)
+

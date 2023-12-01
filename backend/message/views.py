@@ -3,6 +3,10 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from message.models import Message
 from message.serializers import MessageSerializer
 
+from user.models import User
+
+
+
 
 class ListCreateMessageView(ListCreateAPIView):
     """
@@ -16,7 +20,10 @@ class ListCreateMessageView(ListCreateAPIView):
         return Message.objects.order_by("updated")
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+
+        # For now everything is associated to the same user, which is the only one.
+        user = User.objects.get(email='user@email.com')
+        serializer.save(user=user)
 
 
 class RetrieveUpdateDeleteMessageView(RetrieveUpdateDestroyAPIView):
@@ -30,3 +37,5 @@ class RetrieveUpdateDeleteMessageView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'  # field in the database
     lookup_url_kwarg = 'id_message'  # field in the request
     http_method_names = ['get', 'patch', 'delete']  # disallow put as we don't use it
+
+

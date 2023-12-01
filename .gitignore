@@ -33,3 +33,8 @@ next-env.d.ts
 /.vercel
 
 .idea
+
+backend/chatbot/model/
+backend/chatbot/LLM_QA/
+
+backend/chatbot/__pychache__/

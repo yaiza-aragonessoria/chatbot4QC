@@ -8,56 +8,84 @@ const Chat = () => {
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [warning, setWarning] = useState("");
   // const token = localStorage.getItem("access");
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAwNDE3MDk3LCJpYXQiOjE2OTk5ODUwOTcsImp0aSI6IjdiNDg5MDkzY2RmYjQwNGY5MDFiMTlmZWM4MmZlZmM5IiwidXNlcl9pZCI6MX0.m3YO28E3fqZQ9OzK2og35CfL5oNB19Oum12nOcYqMQI";
 
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      // console.log("fetchdata");
+  // const config = {
+  //   headers: { Authorization: `Bearer ${token}` },
+  // };
+
+  const fetchMessages = async () => {
       let backendData = await api.get(
-        "/messages/",
-        {
-    headers: { Authorization: `Bearer ${token}` },}
+        "/messages/"
       );
-      console.log(backendData);
-
       setMessages(backendData.data);
     };
 
+  useEffect(() => {
     fetchMessages();
   }, []);
 
-  const handleSubmit = async (e) => {
-    console.log('handleSubmit')
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    // if (!input.trim()) return;
-    // const userMessage = { text: input, user: true };
-    // setMessages((prevMessages) => [...prevMessages, userMessage]);
-    // const aiMessage = { text: '...', user: false };
-    // setMessages((prevMessages) => [...prevMessages, aiMessage]);
-    // const response = await chatWithGPT3(input);
-    // const newAiMessage = { text: response, user: false };
-    // setMessages((prevMessages) => [...prevMessages.slice(0, -1), newAiMessage]);
-    // setInput('');
+
+    setWarning("");
+    api.post(
+        "/messages/",
+        {
+          content: input,
+          role: "user",
+          previous_message: messages[messages.length - 1].id
+        }
+      )
+      .then((result) => {
+        setInput("");
+        setMessages([...messages, result.data]);
+        fetchMessages();
+      })
+      .catch((error) => {
+        // set warning
+        setWarning(error.message);
+      });
   };
 
-    return (
-    <div className="chatbot-container">
-      <div className="chatbot-messages">
-        {messages.map((message, id) => (
-          <div
-            key={id}
-            className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-          >
-            {message.content}
-          </div>
-        ))}
+  const handleRefresh = async (e) => {
+    e.preventDefault();
+    console.log("Handling refresh...");
+
+    const deleteMessage = async (idMessage) => {
+      await api.delete(`/messages/${idMessage}/`);
+    };
+
+    // Delete all messages except the first one
+    await Promise.all(messages.slice(1).map(message => deleteMessage(message.id)));
+
+    // Fetch the remaining messages
+    fetchMessages();
+  };
+
+  return (
+  <div className="chatbot-container">
+    <div className="chatbot-messages">
+      {messages.map((message, id) => (
+        <div
+          key={id}
+          className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
+        >
+          {message.content}
+          {message.draw ? (
+            <p><img src={message.draw} alt="Draw" />
+            </p>) : null
+          }
+        </div>
+      ))}
+    </div>
+    <div className="chatbot-menu">
+      <div className="refresh-button">
+        <button className='refresh-button' onClick={handleRefresh}><img src="/refresh.png" alt="Refresh Icon" /></button>
       </div>
-      <form className="chatbot-input-form" onSubmit={handleSubmit}>
+      <form className="chatbot-input-form" onSubmit={handleSendMessage}>
         <input
           type="text"
           value={input}
@@ -67,7 +95,8 @@ const Chat = () => {
         <button type="submit">Send</button>
       </form>
     </div>
-  );
+  </div>
+);
 };
 
 export default Chat;

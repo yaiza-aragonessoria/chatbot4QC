@@ -2,7 +2,8 @@
 
 .chatbot-container {
   width: 400px;
-  margin: 0 auto;
+  margin: 30px auto;
+  margin: 30px auto;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
@@ -13,6 +14,10 @@
   height: 400px;
   overflow-y: scroll;
   padding: 8px;
+}
+.chatbot-messages p {
+  display: flex;
+  justify-content: center;
 }
 .message {
   margin: 8px 0;
@@ -32,13 +37,14 @@
 }
 .chatbot-input-form {
   display: flex;
-  margin-top: 16px;
+  flex: 1;
+  /*margin-top: 16px;*/
 }
 .chatbot-input-form input {
   flex: 1;
   padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px 0 0 4px;
+  /*border-radius: 4px 0 0 4px;*/
   font-size: 16px;
 }
 .chatbot-input-form button {
@@ -52,4 +58,22 @@
 }
 .chatbot-input-form button:hover {
   background-color: var(--color-green-pastel);
+}
+.chatbot-menu {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.refresh-button {
+  display: flex;
+  border: none;
+  justify-content: center;
+  padding: 8px;
+  background-color: var(--color-green-pastel);
+  border-radius: 4px 0 0 4px;
+}
+
+.refresh-button img {
+  height: 30px;
 }

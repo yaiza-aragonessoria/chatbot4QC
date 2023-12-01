@@ -37,7 +37,6 @@ class Gate:
 
 
         qiskit_draws_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/media-files/qiskit_draws/"
-        print("qiskit_draws_dir ", qiskit_draws_dir)
 
         circ.draw(output='mpl').savefig(qiskit_draws_dir + f"{current_date}.svg")
         # plt.show()
