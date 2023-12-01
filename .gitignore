@@ -28,6 +28,7 @@ backend/chatbot/tests/data_for_tests/LLM_QA
 
 backend/chatbot/__pychache__/
 backend/chatbot/.pytest_cache
+/.pytest_cache
 
 
 # env files
