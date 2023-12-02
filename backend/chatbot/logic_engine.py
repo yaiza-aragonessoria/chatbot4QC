@@ -2,10 +2,12 @@ import os
 
 import qiskit as qiskit
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 from qiskit.quantum_info import Statevector
 import numpy as np
 import math
 import datetime
+import io
 
 
 class Gate:
@@ -33,15 +35,20 @@ class Gate:
         else:
             circ = self.apply()
 
-        current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        # current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
-        qiskit_draws_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/media-files/qiskit_draws/"
+        # qiskit_draws_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/media-files/qiskit_draws/"
 
-        circ.draw(output='mpl').savefig(qiskit_draws_dir + f"{current_date}.svg")
+        draw = circ.draw(output='mpl')
+        # circ.draw(output='mpl').savefig(qiskit_draws_dir + f"{current_date}.svg")
         # plt.show()
+        canvas = FigureCanvasAgg(draw)
+        buffer = io.BytesIO()
+        canvas.print_png(buffer)
+        image_data = buffer.getvalue()
 
-        return current_date
+        return image_data
 
     def compute_state(self, initial_state=None):
         if self.n_qubits == 1:
@@ -292,8 +299,9 @@ initial_states = {'|0>': Statevector([1,0]),
                   }
 
 if __name__ == '__main__':
-    # r_class = gates.get('RX')
-    # r_object = r_class(math.pi)
-    # r_object.draw()
+    r_class = gates.get('rotation').get("RX")
+    print(r_class)
+    r_object = r_class(math.pi)
+    r_object.draw()
 
     print(gate_names)
