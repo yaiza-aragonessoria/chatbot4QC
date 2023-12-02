@@ -305,4 +305,3 @@ if __name__ == '__main__':
     r_object.draw()
 
     print(gate_names)
-
