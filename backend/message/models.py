@@ -1,5 +1,10 @@
 import json
 import math
+import re
+import datetime
+
+from django.core.files.base import ContentFile
+from django.core.files.images import ImageFile
 
 pi = math.pi
 PI = math.pi
@@ -11,7 +16,63 @@ from chatbot.interface import AnswerHandler, FileManager
 import chatbot.logic_engine as le
 from django.core.files import File
 
+def transform_string_to_value(input_string):
+    try:
+        result = eval(input_string)
+    except Exception:
+        # Define regular expression patterns to match the input string
+        patterns = [re.compile(r'([a-zA-Zα-ωΑ-Ω]+)\/(\d*\.?\d*)'),
+                    re.compile(r'(\d*\.?\d*)([a-zA-Zα-ωΑ-Ω]+)\/(\d*\.?\d*)'),
+                    re.compile(r'(\d*\.?\d*)([a-zA-Zα-ωΑ-Ω]+)'),
+                    re.compile(r'([a-zA-Zα-ωΑ-Ω]+)') ]
 
+        # Match the pattern in the input string
+        for i, pattern in enumerate(patterns):
+            match = pattern.match(input_string)
+            if match:
+                break
+
+        if i ==0:
+            unit = match.group(1)
+            denominator = float(match.group(2))
+
+            # Check if the unit is a recognized mathematical constant
+            if unit.lower() == 'pi' or unit.lower() == 'π':
+                result = math.pi / denominator
+            else:
+                print(f"Unsupported unit: {unit}")
+        elif i == 1:
+            numeric_value = float(match.group(1))
+            unit = match.group(2)
+            denominator = float(match.group(3))
+
+            # Check if the unit is a recognized mathematical constant
+            if unit.lower() == 'pi' or unit.lower() == 'π':
+                result = numeric_value * math.pi / denominator
+            else:
+                print(f"Unsupported unit: {unit}")
+
+        elif i == 2:
+            if match:
+                if input_string.lower() == 'π' :
+                    unit = match.group(2)
+
+                    if unit.lower() == 'π':
+                        result = math.pi
+                    else:
+                        print(f"Unsupported unit: {unit}")
+                else:
+                    numeric_value = float(match.group(1))
+                    unit = match.group(2)
+
+                    if unit.lower() == 'pi' or unit.lower() == 'π':
+                        result = numeric_value * math.pi
+                    else:
+                        print(f"Unsupported unit: {unit}")
+            else:
+                print("Invalid input format")
+
+    return result
 
 class Message(models.Model):
     content = models.TextField(blank=False, null=False)
@@ -67,7 +128,7 @@ class Message(models.Model):
 
                     if bert_answer:
                         try:
-                            phase_shift = eval(
+                            phase_shift = transform_string_to_value(
                                 bert_answer.get('What is the phase shift?').get('answer').get('answer')[0])
                             parameters['phase_shift'] = phase_shift
                         except Exception:
@@ -95,10 +156,11 @@ class Message(models.Model):
 
                     if bert_answer:
                         try:
-                            angle = eval(bert_answer.get(questions[0]).get('answer').get('answer')[0])
+                            angle = transform_string_to_value(bert_answer.get(questions[0]).get('answer').get('answer')[0])
                             parameters['angle'] = angle
 
                         except Exception:
+                            print("Exception ", Exception)
                             print('Rotation angle could not be read, and so an angle of zero radians was assumed.')
                             angle = 0
                             parameters['angle'] = angle
@@ -158,14 +220,21 @@ class Message(models.Model):
 
                 if category == 1:
                     # parameters['draw'] = le_answer
+                    # print("type le answer ", le_answer)
                     parameters_json = json.dumps(parameters, sort_keys=True, indent=4)
                     le_answer_message = Message(content='Here is the circuit:',
                                                 previous_message=previous_message,
                                                 user=self.user,
                                                 parameters=parameters_json)
-                    with open(f'/app/backend/media-files/qiskit_draws/{le_answer}.svg', 'rb') as image_file:
-                        le_answer_message.draw.save(f'qiskit_draws/{le_answer}.svg', File(image_file), save=True)
-                        print("le_answer_meessage saved")
+                    # with open(f'/app/backend/media-files/qiskit_draws/{le_answer}.svg', 'rb') as image_file:
+                    #     le_answer_message.draw.save(f'qiskit_draws/{le_answer}.svg', File(image_file), save=True)
+                    #     print("le_answer_meessage saved")
+
+                    current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+                    le_answer_message.draw.save(f'qiskit_draws/{current_date}.png', ContentFile(le_answer), save=True)
+                    print("le_answer_meessage saved")
+
                 else:
                     parameters_json = json.dumps(parameters, sort_keys=True, indent=4)
                     le_answer_message = Message(content=le_answer,

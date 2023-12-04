@@ -14,36 +14,8 @@ import LLM_QA
 @pytest.fixture
 def bert_qa_scratch_false():
     # You can customize the parameters for testing
-    return LLM_QA.BertQA(epochs=1, train_files=["./tests/data_for_tests/test_phase_shifts_data_train.json",
-                                                "./tests/data_for_tests/test_rotation_data_train.json"],
-                         test_files=["./tests/data_for_tests/test_phase_shifts_data_test.json",
-                                     "./tests/data_for_tests/test_rotation_data_test.json"],
-                         train_from_scratch=False)
+    return LLM_QA.BertQA(train_from_scratch=False)
 
-
-# @pytest.fixture
-# def bert_qa_scratch_true():
-#     # You can customize the parameters for testing
-#     return LLM_QA.BertQA(epochs=1, train_files=["./tests/data_for_tests/test_phase_shifts_data_train.json",
-#                                                 "./tests/data_for_tests/test_rotation_data_train.json"],
-#                          test_files=["./tests/data_for_tests/test_phase_shifts_data_test.json",
-#                                      "./tests/data_for_tests/test_rotation_data_test.json"],
-#                          train_from_scratch=True)
-
-
-# @pytest.fixture
-# def reset_bert_attributes(request, bert_qa_scratch_false):
-#     # This function will be called after the test has finished
-#     def finalizer():
-#         bert_qa_scratch_false.train_files = ["./tests/data_for_tests/test_phase_shifts_data_train.json",
-#                                              "./tests/data_for_tests/test_rotation_data_train.json"]
-#         bert_qa_scratch_false.test_files = ["./tests/data_for_tests/test_phase_shifts_data_test.json",
-#                                             "./tests/data_for_tests/test_rotation_data_test.json"]
-#         bert_qa_scratch_false.train_from_scratch = False
-#
-#     # Register the finalizer
-#     request.addfinalizer(finalizer)
-#
 
 def transform_data_from_files_to_tuples(file_paths, max_elements=None):
     result = []

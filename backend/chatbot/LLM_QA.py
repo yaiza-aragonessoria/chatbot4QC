@@ -1,10 +1,6 @@
 import json
 import os
-import sys
-
-import sklearn
 from simpletransformers.question_answering import QuestionAnsweringModel
-import time
 
 class BertQA:
     def __init__(self, epochs=4, train_files=["./data/QA/phase_shifts_data_train.json", "./data/QA/rotation_data_train.json"],
@@ -107,11 +103,16 @@ class BertQA:
         return question_answers
 
 if __name__ == "__main__":
-    bert_qa = BertQA(epochs=1, train_files=["./tests/data_for_tests/test_phase_shifts_data_train.json",
-                                      "./tests/data_for_tests/test_rotation_data_train.json"],
-                         test_files=["./tests/data_for_tests/test_phase_shifts_data_test.json",
-                                     "./tests/data_for_tests/test_rotation_data_test.json"],
+    train_file_paths = ["./data/QA/rotation_data_train.json", "./data/QA/phase_shifts_data_train.json"]
+    test_file_paths = ["./data/QA/rotation_data_test.json", "./data/QA/phase_shifts_data_test.json"]
+
+    bert_qa = BertQA(epochs=1, train_files=train_file_paths,
+                         test_files=test_file_paths,
                          train_from_scratch=True)
+    # bert_qa = BertQA(train_from_scratch=False)
 
     answer = bert_qa.ask_questions("After the application of a phase gate with a phase shift of 5π/6 to the |0> state, what will the new state be?", ["What is the phase shift?"] )
     print(answer['What is the phase shift?']['answer']['answer'][0])
+
+    answer = bert_qa.ask_questions("Could you perform a smooth rotation of 5pi/8 around the y?", ["What is the angle of the rotation?"] )
+    print(answer['What is the angle of the rotation?']['answer']['answer'][0])

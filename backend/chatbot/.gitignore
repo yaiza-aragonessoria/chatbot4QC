@@ -6,4 +6,5 @@ __pychache__/
 LLM_QA/
 quantum_LLM.pth
 tests/data_for_tests/LLM_QA
+runs/
 
