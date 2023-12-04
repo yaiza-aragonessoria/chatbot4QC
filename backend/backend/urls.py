@@ -40,7 +40,7 @@ schema_view = get_schema_view(
     public=True,  # Set to False to restrict access to protected endpoints
     permission_classes=[permissions.AllowAny, ],  # Permissions for docs access
     # permission_classes=[permissions.IsAuthenticated]
-    # url=os.environ.get('BASE_URL'),
+    url=os.environ.get('BASE_URL'),
 )
 
 urlpatterns = [
