@@ -27,9 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1", "http://localhost:3000", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1", "http://localhost:3000", "http://localhost:8000", "https://www.chatbot4quantum.com", "https://www.chatbot4quantum.org", "https://www.chatbot4quantum.net", "http://5.1.100.212"]
 
-CORS_ALLOWED_ORIGINS = ["http://127.0.0.1", "http://localhost:3000", "http://localhost:8000"]
+CORS_ALLOWED_ORIGINS = ["http://127.0.0.1", "http://localhost:3000", "http://localhost:8000", "https://www.chatbot4quantum.com", "https://www.chatbot4quantum.org", "https://www.chatbot4quantum.net", "http://5.1.100.212"]
 
 CORS_ALLOW_METHODS = [
     "DELETE",

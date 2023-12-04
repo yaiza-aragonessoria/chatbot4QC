@@ -35,14 +35,8 @@ class Gate:
         else:
             circ = self.apply()
 
-        # current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
-
-        # qiskit_draws_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/media-files/qiskit_draws/"
 
         draw = circ.draw(output='mpl')
-        # circ.draw(output='mpl').savefig(qiskit_draws_dir + f"{current_date}.svg")
-        # plt.show()
         canvas = FigureCanvasAgg(draw)
         buffer = io.BytesIO()
         canvas.print_png(buffer)

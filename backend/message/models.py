@@ -226,14 +226,10 @@ class Message(models.Model):
                                                 previous_message=previous_message,
                                                 user=self.user,
                                                 parameters=parameters_json)
-                    # with open(f'/app/backend/media-files/qiskit_draws/{le_answer}.svg', 'rb') as image_file:
-                    #     le_answer_message.draw.save(f'qiskit_draws/{le_answer}.svg', File(image_file), save=True)
-                    #     print("le_answer_meessage saved")
 
                     current_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
                     le_answer_message.draw.save(f'qiskit_draws/{current_date}.png', ContentFile(le_answer), save=True)
-                    print("le_answer_meessage saved")
 
                 else:
                     parameters_json = json.dumps(parameters, sort_keys=True, indent=4)

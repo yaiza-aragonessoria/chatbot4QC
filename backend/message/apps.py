@@ -1,3 +1,5 @@
+import os
+
 from django.apps import AppConfig
 from chatbot.interface import Chatbot, FileManager
 import chatbot.logic_engine as le
@@ -7,16 +9,18 @@ class MessageConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'message'
 
-    # Create an instance of the Chatbot class, passing the data folder path
-    data_folder_path = './data/gate_questions/'
-    chatbot = Chatbot(data_folder_path, le)
+    base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    # # Create an instance of the Chatbot class, passing the data folder path
+    # data_folder_path = f'{base_directory}/chatbot/data/gate_questions/'
+    # chatbot = Chatbot(data_folder_path, le)
 
     # Initialize the chatbot with the specified checkpoint file
-    data_folder_path = './chatbot/data/gate_questions/'
+    data_folder_path = f'{base_directory}/chatbot/data/gate_questions/'
     classifbert = Chatbot(data_folder_path, le)
 
     # Initialize the chatbot with the specified checkpoint file
-    checkpoint_folder_path = '/app/backend/chatbot/model/'
+    checkpoint_folder_path = f'{base_directory}/chatbot/model/'
     file_manager = FileManager(checkpoint_folder_path)
     file_manager.get_latest_file()
 
