@@ -209,6 +209,7 @@ class Message(models.Model):
                         gate = gate_object(angle)
                     else:
                         gate = le.gates.get('rotation').get('RX')(0)
+                    print("gate ", gate)
 
                 answer_handler = AnswerHandler(category, gate, [initial_state])
                 le_answer = answer_handler.apply_gate_method()

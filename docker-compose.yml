@@ -44,6 +44,26 @@ services:
 
     volumes:
       - ./backend:/app/backend
+      - static-files:/static-files
+      - media-files:/media-files
 
     depends_on:
       - db
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - static-files:/static-files
+      - media-files:/media-files
+      - ./nginx:/etc/nginx/conf.d/
+      - build:/build
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db:
+  static-files:
+  media-files:
+  build:

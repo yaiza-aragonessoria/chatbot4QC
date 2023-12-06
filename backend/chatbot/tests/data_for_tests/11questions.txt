@@ -117,3 +117,127 @@
 0	define phase-flip
 0	define phase-flip
 0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define phase-flip
+0	define identity
+0	define Pauli x
+2	define pauliX
+2	define bit flip
+0	define bit-flip
+0	define Pauli y
+0	define Pauli z
+0	define pauliY
+0	define phase flip
+0	define identity
+0	define Pauli x
+0	define pauliX
+0	define bit flip
+0	define bit-flip
+0	define Pauli y
+0	define Pauli z
+0	define pauliY
+0	define phase flip
+0	define phase-flip
+0	define S gate
+0	define s daga
+0	define S†
+0	define inverse of S
+0	define s daga
+0	define square root of z
+0	define √Z
+0	define Hadamard
+0	define phase gate
+0	define identity
+0	define Pauli x
+0	define pauliX
+0	define bit flip
+0	define bit-flip
+0	define Pauli y
+0	define Pauli z
+0	define pauliY
+0	define phase flip
+0	define phase-flip
+0	define S gate
+0	define s daga
+0	define S†
+0	define identity
+0	define Pauli x
+0	define Pauli y
+0	define Pauli z
+0	define Hadamard
+0	define S gate
+0	define s daga
+0	define phase gate
+0	define CNOT
+0	define control z
+0	define swap
+0	define rotation
+0	define phase
+0	define identity
+0	define Pauli x
+0	define Pauli y
+0	define Pauli z
+0	define Hadamard
+0	define S gate
+0	define s daga
+0	define phase gate
+0	define CNOT
+0	define control z
+0	define swap
+0	define rotation
+0	define phase
+0	define identity
+0	define Pauli x
+0	define Pauli y
+0	define Pauli z
+0	define Hadamard
+0	define S gate
+0	define s daga
+0	define phase gate
+0	define CNOT
+0	define control z
+0	define swap
+0	define rotation
+0	define phase
+0	define identity
+0	define Pauli x
+0	define Pauli y
+0	define Pauli z
+0	define Hadamard
+0	define S gate
+0	define s daga
+0	define phase gate
+0	define CNOT
+0	define control z
+0	define swap
+0	define rotation
+0	define phase
+0	define identity
+0	define Pauli x
+0	define Pauli y
+0	define Pauli z
+0	define Hadamard
+0	define S gate
+0	define s daga
+0	define phase gate
+0	define CNOT
+0	define control z
+0	define swap
+0	define rotation
+0	define phase

@@ -181,7 +181,10 @@ def chatbot_test_data_fixture():
 
 
 def prepare_test_data(gate_list, max_elements=None):
-    gate_tuple = tuple(gate_list)
+    if isinstance(gate_list, list):
+        gate_tuple = tuple(gate_list)
+    elif isinstance(gate_list, dict):
+        gate_tuple = tuple(gate_list.keys())
 
     if max_elements:
         # Shuffle the elements of the input tuple
@@ -227,20 +230,20 @@ def test_define_gate(chatbot_test_data_fixture, gate_name_for_question, capfd):
     # assert gate.explain() in captured.out
     # print(captured.out)
 
-@pytest.mark.parametrize("gate_name_for_question", prepare_test_data(le.gate_names, max_elements=1))
+@pytest.mark.parametrize("gate_name_for_question", prepare_test_data(le.official_gates, max_elements=None))
 def test_start_calls_expected_methods_with_user_input(chatbot_test_data_fixture, gate_name_for_question, capfd):
-    gate_name_for_question = 'phase-flip'
+    # gate_name_for_question = 'phase-flip'
     user_question = f"define {gate_name_for_question}"
 
-    if len(gate_name_for_question) > 4 and gate_name_for_question[4] == 'phase':
+    if gate_name_for_question in ('phase gate', 'phase', 'phase shift'):
         gate = le.PhaseGate(0)
     elif gate_name_for_question == 'rotation':
         gate = le.RX(0)
     else:
         gate = le.gates.get(gate_name_for_question)
 
-
-    with patch("builtins.input", side_effect=[user_question, "yes", 'exit']):
+    with patch("builtins.input", side_effect=[user_question, "yes", "exit"]), \
+         patch.object(chatbot_test_data_fixture, "classify_user_input", return_value=(0, torch.tensor([[4.9444, -2.5437, -2.7457]]), torch.tensor([[0, 1, 2]]))) as mock_classify:
 
         # with pytest.raises(SystemExit):  # To break out of the infinite loop
         chatbot_test_data_fixture.start()

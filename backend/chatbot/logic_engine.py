@@ -274,8 +274,6 @@ gates = {}
 for gate_key in gate_for_names.keys():
     gate = gate_for_names[gate_key]
     official_gate = official_gates[gate_key]
-    print(gate_key)
-    print(type(official_gate))
     gate_names.append(gate_key)
     gates[gate_key] = gate
     if gate.alternative_names:
@@ -309,6 +307,7 @@ if __name__ == '__main__':
     # r_object.draw()
 
     print(len(gate_names))
+    print(gate_names)
     print(len(gates))
     print(gates)
     print(type(gates.get('phase')))

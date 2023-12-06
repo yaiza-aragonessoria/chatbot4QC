@@ -328,7 +328,7 @@ class Chatbot:
             if gate_object:
                 gate = gate_object(angle)
             else:
-                gate = self.gates.get('rotation').get('x')(0)
+                gate = self.gates.get('rotation').get('RX')(0)
 
             return None, angle, axis, gate_name, gate
 
