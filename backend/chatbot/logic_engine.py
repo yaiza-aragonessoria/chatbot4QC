@@ -163,12 +163,14 @@ class CNOT(Gate):
 
 
 class CZ(Gate):
-    def __init__(self, control_qubit, target_qubit, name='control z', n_qubits=2, qiskit_name='cz',
+    def __init__(self, control_qubit, target_qubit, name='control z',
+                 alternative_names=('CZ',),
+                 n_qubits=2, qiskit_name='cz',
                  definition='The controlled phase, (CZ) gate is a two-qubit gate that applies a Pauli Z on the target '
                             'qubit state if and only if the control qubit |1>. Otherwise, the target qubit is '
                             'unchanged.',
                  ):
-        super().__init__(name, n_qubits, definition, qiskit_name)
+        super().__init__(name, n_qubits, definition, qiskit_name, alternative_names)
         self.control_qubit = control_qubit
         self.target_qubit = target_qubit
 
@@ -260,7 +262,7 @@ cnot = CNOT(0, 1)
 cz = CZ(1, 0)
 swap = Swap(0, 1)
 
-gates = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, hadamard.name: hadamard,
+official_gates = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, hadamard.name: hadamard,
          s.name: s, sdg.name: sdg, phasePI2.name: PhaseGate, cnot.name: cnot, cz.name: cz, swap.name: swap,
          'rotation': {'RX': RX, 'RY': RY, 'RZ': RZ,}, 'phase': PhaseGate}
 
@@ -268,11 +270,19 @@ gate_for_names = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pau
                    sdg.name: sdg, hadamard.name: hadamard, phasePI2.name: phasePI2,
                    cnot.name: cnot, cz.name: cz, swap.name: swap, 'rotation': RXPI}
 gate_names = []
+gates = {}
 for gate_key in gate_for_names.keys():
     gate = gate_for_names[gate_key]
+    official_gate = official_gates[gate_key]
+    print(gate_key)
+    print(type(official_gate))
     gate_names.append(gate_key)
+    gates[gate_key] = gate
     if gate.alternative_names:
         gate_names.extend(gate.alternative_names)
+        for alternative_name in gate.alternative_names:
+            gates[alternative_name] = official_gate
+gates['rotation'] = {'RX': RX, 'RY': RY, 'RZ': RZ}
 
 initial_states = {'|0>': Statevector([1,0]),
                   '|1>': Statevector([0,1]),
@@ -293,9 +303,13 @@ initial_states = {'|0>': Statevector([1,0]),
                   }
 
 if __name__ == '__main__':
-    r_class = gates.get('rotation').get("RX")
-    print(r_class)
-    r_object = r_class(math.pi)
-    r_object.draw()
+    # r_class = gates.get('rotation').get("RX")
+    # print(r_class)
+    # r_object = r_class(math.pi)
+    # r_object.draw()
 
-    print(gate_names)
+    print(len(gate_names))
+    print(len(gates))
+    print(gates)
+    print(type(gates.get('phase')))
+    print(len(official_gates))

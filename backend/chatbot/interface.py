@@ -266,7 +266,7 @@ class Chatbot:
 
         if user_response == 'yes' or user_response == '':
             # Append the user's question to a data file
-            if not self.file_manager:
+            if not self.file_manager.file_name:
                 self.file_manager.get_latest_file()
             with open(self.file_manager.folder_path + self.file_manager.file_name, 'a') as file:
                 file.write(f'{category}\t{user_question}' + '\n')

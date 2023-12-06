@@ -108,10 +108,7 @@ class Message(models.Model):
                 user_question = self.previous_message.previous_message.content
 
                 # Save user question and category for retraining
-                # file_manager = FileManager('/app/backend/chatbot/data/gate_questions/')
-                # file_manager.get_latest_file()
                 file_manager = MessageConfig.classifbert.file_manager
-                print("file path: ", file_manager.folder_path + file_manager.file_name)
                 if isinstance(category, int) and user_question:
                     with open(file_manager.folder_path + file_manager.file_name, 'a') as file:
                         file.write(f'{category}\t{user_question}' + '\n')
@@ -147,12 +144,11 @@ class Message(models.Model):
                     else:
                         phase_shift = 0
 
-                    gate = gate(phase_shift)
+                    gate = le.PhaseGate(phase_shift)
                 elif gate_name == 'rotation':
                     bert_qa = MessageConfig.bert_qa
                     questions = ["What is the angle of the rotation?", "What is the axis of the rotation?"]
                     bert_answer = bert_qa.ask_questions(context=user_question, questions=questions)
-                    print("bert_answer ", bert_answer)
 
                     if bert_answer:
                         try:
@@ -160,7 +156,6 @@ class Message(models.Model):
                             parameters['angle'] = angle
 
                         except Exception:
-                            print("Exception ", Exception)
                             print('Rotation angle could not be read, and so an angle of zero radians was assumed.')
                             angle = 0
                             parameters['angle'] = angle
@@ -219,8 +214,6 @@ class Message(models.Model):
                 le_answer = answer_handler.apply_gate_method()
 
                 if category == 1:
-                    # parameters['draw'] = le_answer
-                    # print("type le answer ", le_answer)
                     parameters_json = json.dumps(parameters, sort_keys=True, indent=4)
                     le_answer_message = Message(content='Here is the circuit:',
                                                 previous_message=previous_message,

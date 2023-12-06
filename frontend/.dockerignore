@@ -2,3 +2,15 @@ node_modules
 npm-debug.log
 Dockerfile
 yarn-error.log
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.vscode
+**/docker-compose*
+**/compose*
+**/Dockerfile*
+**/node_modules
+**/ollama
+LICENSE
+README.md

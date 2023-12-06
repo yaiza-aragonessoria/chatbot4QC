@@ -35,7 +35,8 @@ class BertQA:
             "learning_rate": 2e-5,
             "verbose": True,
             "evaluation_strategy": "epoch",
-            "logging_strategy": "epoch"
+            "logging_strategy": "epoch",
+            "save_steps": False
         }
 
         self.model = QuestionAnsweringModel(self.model_type, self.model_name, args=self.train_args, use_cuda=False)

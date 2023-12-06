@@ -1,0 +1,15 @@
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.vscode
+**/docker-compose*
+**/compose*
+**/Dockerfile*
+**/node_modules
+**/ollama
+LICENSE
+README.md
+/chatbot/runs
+/chatbot/LLM_QA/outputs
+/chatbot/cache_dir
