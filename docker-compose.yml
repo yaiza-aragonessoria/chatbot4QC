@@ -2,19 +2,6 @@ version: '3.9'
 
 
 services:
-  db:
-    image: postgres:14-alpine
-    ports:
-      - '5432:5432'
-
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
-
-    volumes:
-      - ./data/db:/var/lib/postgresql/data/
-
   frontend:
     build:
       context: ./frontend
@@ -28,6 +15,19 @@ services:
 
     depends_on:
       - backend
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - '5432:5432'
+
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+
+    volumes:
+      - ./data/db:/var/lib/postgresql/data/
 
   backend:
     build:
@@ -44,26 +44,25 @@ services:
 
     volumes:
       - ./backend:/app/backend
-      - static-files:/static-files
-      - media-files:/media-files
+      - static-files:/app/backend/static-files
+      - media-files:/app/backend/media-files
 
     depends_on:
       - db
 
-  nginx:
-    image: nginx:latest
-    volumes:
-      - static-files:/static-files
-      - media-files:/media-files
-      - ./nginx:/etc/nginx/conf.d/
-      - build:/build
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
+#  nginx:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    volumes:
+#      - static-files:/static-files
+#      - media-files:/media-files
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - backend
 
 volumes:
   db:
   static-files:
   media-files:
-  build:

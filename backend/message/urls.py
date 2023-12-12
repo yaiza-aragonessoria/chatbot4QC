@@ -1,8 +1,10 @@
 from django.urls import path
 
-from message.views import ListCreateMessageView, RetrieveUpdateDeleteMessageView
+from message.views import ListCreateMessageView, RetrieveUpdateDeleteMessageView, ClearMessagesView, ListUserMessagesView
 
 urlpatterns = [
     path('', ListCreateMessageView.as_view()),
     path('<int:id_message>/', RetrieveUpdateDeleteMessageView.as_view()),
+    path('clear/', ClearMessagesView.as_view()),
+    path('user/', ListUserMessagesView.as_view()),
 ]

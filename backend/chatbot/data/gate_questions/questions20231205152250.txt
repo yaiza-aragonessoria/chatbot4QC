@@ -3,3 +3,20 @@
 0	define a rotation
 0	define the pauli x
 1	draw the pauli x
+2	rotate the state |1> around x an angle of pi/2
+1	draw a pauli x
+2	apply a pauli x on |1>
+1	draw a pauli x
+2	apply a pauli x
+1	draw a cz
+2	apply a pauli x
+2	apply a pauli x
+2	apply a pauli x
+2	define a swap gate
+0	define a swap
+2	apply a pauli y on |+>
+0	define the hadamard
+0	define the pauli x
+0	define the pauli y
+0	define the pauli y
+0	define the pauli y

@@ -1,0 +1,11 @@
+0	define pauli x
+0	define pauli y
+0	define pauli x
+0	define pauli x
+0	define a pauli x
+0	define a pauli x
+0	define the pauli x
+0	define the hadamard
+0	define the cnot
+0	define the pauli x
+0	define pauli x

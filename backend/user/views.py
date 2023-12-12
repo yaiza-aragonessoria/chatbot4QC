@@ -1,9 +1,12 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
-
-# from message.models import Message
+from django.http import JsonResponse
+from django.views import View
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, ListCreateAPIView, \
+    DestroyAPIView, CreateAPIView
+from message.models import Message
 from user.serializers import UserSerializer
 
 
@@ -62,3 +65,30 @@ class RetrieveUserView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     # permission_classes = [IsAuthenticated]
+
+
+class CreateUserView(CreateAPIView):
+    user_serializer = UserSerializer
+    http_method_names = ['post']
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        user_email = data.get('email')
+        user = User.objects.create(email=user_email)
+        return JsonResponse({'message': 'User created successfully'})
+
+
+class DeleteUserView(DestroyAPIView):
+    user_serializer = UserSerializer
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        user_email = data.get('email')
+        try:
+            user = User.objects.get(email=user_email)
+            messages = Message.objects.filter(user=user)
+            messages.delete()  # Delete messages associated to the user
+            user.delete()  # Delete the user
+            return JsonResponse({'message': 'User deleted successfully'})
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)

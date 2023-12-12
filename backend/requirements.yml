@@ -24,3 +24,5 @@ dependencies:
       - psycopg2-binary==2.9.9
       - django-cleanup==8.0.0
       - gunicorn==21.2.0
+      - selenium
+      - requests==2.31.0
