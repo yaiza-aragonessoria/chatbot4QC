@@ -59,6 +59,28 @@ const Chat = () => {
     }
   };
 
+  const createGreetingMessage = () => {
+    setWarning("");
+    api.post(
+        "/messages/",
+        {
+          content: 'Hola, how can I help you?',
+          role: "ai",
+          user_email: userEmail
+        }
+      )
+      .then((result) => {
+        setInput("");
+        setMessages([...messages, result.data]);
+        fetchMessages();
+      })
+      .catch((error) => {
+        // set warning
+        setWarning(error.message);
+      });
+
+  }
+
   const fetchMessages = async () => {
       let backendData = await api.get("/messages/user/",
                                                   { params: {user_email: userEmail}}
@@ -71,15 +93,10 @@ const Chat = () => {
       await api.delete(`/messages/${idMessage}/`);
     };
 
-  // const clearAllMessages = async () => {
-  //   console.log("Clearing all messages...")
-  //     await api.post('/messages/clear/');
-  //   };
-
   useEffect(() => {
-    // clearAllMessages();
     setMessages([])
     createUser(userEmail);
+    createGreetingMessage();
     fetchMessages();
 
     // Specify a cleanup function for when the component is unmounted
@@ -117,6 +134,13 @@ const Chat = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+
+    console.log({
+          content: input,
+          role: "user",
+          previous_message: messages[messages.length - 1].id,
+          user_email: userEmail
+        })
 
     setWarning("");
     api.post(

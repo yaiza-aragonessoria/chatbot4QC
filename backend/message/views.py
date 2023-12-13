@@ -1,6 +1,4 @@
 from django.db.models import Q
-from django.http import JsonResponse
-from django.views import View
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404, ListAPIView
@@ -55,22 +53,6 @@ class RetrieveUpdateDeleteMessageView(RetrieveUpdateDestroyAPIView):
     http_method_names = ['get', 'patch', 'delete']  # disallow put as we don't use it
 
 
-class ClearMessagesView(ListCreateAPIView):
-    serializer_class = MessageSerializer
-    http_method_names = ['post']
-
-    def post(self, request, *args, **kwargs):
-        email = 'user@email.com'
-        message_id_to_keep = 1
-
-        # Get the user with the provided email
-        user = get_object_or_404(User, email=email)
-
-        # Delete all chat messages associated with the user except the one with message_id_to_keep
-        Message.objects.filter(user=user).exclude(id=message_id_to_keep).delete()
-
-        return JsonResponse({'status': 'success'})
-
 
 class ListUserMessagesView(ListAPIView):
     """
@@ -82,6 +64,6 @@ class ListUserMessagesView(ListAPIView):
 
     def get_queryset(self):
         user_email = self.request.query_params.get('user_email')
-        messages = Message.objects.filter(Q(user__email='user@email.com') | Q(user__email=user_email)).order_by("updated")
+        messages = Message.objects.filter(Q(user__email=user_email)).order_by("updated")
         return messages
 
