@@ -30,10 +30,12 @@
   background-color: var(--color-green-pastel);
   /*color: #fff;*/
   text-align: right;
+  white-space: pre-line;
 }
 .ai-message {
   background-color: #f0f0f0;
   text-align: left;
+  white-space: pre-line;
 }
 .chatbot-input-form {
   display: flex;

@@ -240,7 +240,7 @@ class Chatbot:
         closest_gates = parameters['closest_gates']
         closest_initial_states = parameters['closest_initial_states']
 
-        gate_name = closest_gates[0][1]
+        gate_name = closest_gates[0][1] if closest_gates else None
         initial_state_name = closest_initial_states[0][1] if closest_initial_states else None
 
         question_checker = QuestionChecker(category, gate_name=gate_name, initial_state=initial_state_name)

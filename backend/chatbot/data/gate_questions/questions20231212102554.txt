@@ -14,3 +14,4 @@
 0	define the cnot
 1	draw the cnot
 2	apply the cnot on |11>
+1	draw a pauli x

@@ -12,12 +12,21 @@ const Chat = () => {
   const [input, setInput] = useState('');
   const [warning, setWarning] = useState("");
   const [userEmail, setUserEmail] = useState(`${uuidv4()}@email.com`);
+  const greetingMessage = "Hola!\n I'm C4Q, your assistant in quantum computing. " +
+      "For now, my focus is on quantum gates.\n Feel free to ask me about:\n\n" +
+      "1️⃣ Defining a Quantum Gate.\n" + "\n" +
+      "2️⃣ Drawing a Quantum Gate.\n\n" +
+      "3️⃣ Applying a Quantum Gate.\n\n" +
+      "Gates include: Identity, Pauli, S, Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n\n" +
+      "So, how can I help you? 🚀✨"
+
   // const token = localStorage.getItem("access");
 
 
   // const config = {
   //   headers: { Authorization: `Bearer ${token}` },
   // };
+
 
   const createUser = async (userEmail)=>{
     try {
@@ -68,7 +77,7 @@ const Chat = () => {
     api.post(
         "/messages/",
         {
-          content: 'Hola, how can I help you?',
+          content: greetingMessage,
           role: "ai",
           user_email: userEmail
         }
@@ -160,6 +169,7 @@ const Chat = () => {
       .then((result) => {
         setInput("");
         setMessages([...messages, result.data]);
+        console.log(messages);
         fetchMessages();
       })
       .catch((error) => {
