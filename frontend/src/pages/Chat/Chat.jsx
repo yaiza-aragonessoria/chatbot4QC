@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import api from "../../api/chatbot4QC"
 import "./Chat.css"
+import {logDOM} from "@testing-library/react";
 const Chat = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,8 +33,11 @@ const Chat = () => {
       }
 
       console.log(response.data.message); // Log the server response
+
+      return response
     } catch (error) {
       console.error('Error during user creation:', error);
+      return error
     }
   };
 
@@ -95,8 +99,16 @@ const Chat = () => {
 
   useEffect(() => {
     setMessages([])
-    createUser(userEmail);
-    createGreetingMessage();
+    createUser(userEmail)
+        .then( (response) => {
+          createGreetingMessage()
+        })
+        .catch((error) => {
+          // set warning
+          setWarning(error.message);
+          console.log({warning});
+        });
+
     fetchMessages();
 
     // Specify a cleanup function for when the component is unmounted
@@ -134,13 +146,6 @@ const Chat = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-
-    console.log({
-          content: input,
-          role: "user",
-          previous_message: messages[messages.length - 1].id,
-          user_email: userEmail
-        })
 
     setWarning("");
     api.post(
@@ -205,6 +210,9 @@ const Chat = () => {
         <button type="submit">Send</button>
       </form>
     </div>
+    <div className='version'>
+        version 0.1
+      </div>
   </div>
 );
 };
