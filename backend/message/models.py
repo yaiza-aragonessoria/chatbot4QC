@@ -75,20 +75,22 @@ def transform_string_to_value(input_string):
     return result
 
 def create_more_details_message(previous_message, user):
-    more_details_message = Message(content="I'm sorry. It seems I'm having difficulty understanding your "
-                                           "inquiry. Could you please provide more details or rephrase "
-                                           "your question? This will help me assist you more effectively. "
-                                           "Thank you! 🤖",
+    more_details_message = Message(content="Sorry, I didn't quite catch that. " +
+                                           "Could you provide more details or ask in a different way?",
                                    previous_message=previous_message,
                                    user=user)
     more_details_message.save()
 
-    what_I_do_message = Message(content="I'm sorry. It seems I'm having difficulty understanding your "
-                                           "inquiry. Could you please provide more details or rephrase "
-                                           "your question? This will help me assist you more effectively. "
-                                           "Thank you! 🤖",
+    what_I_do_message = Message(content="Remember, you can ask me about:\n" +
+                                        "1. Defining a quantum gate.\n" +
+                                        "2. Drawing a quantum gate.\n" +
+                                        "3. Applying a quantum gate.\n" +
+                                        "Gates include: Identity, Pauli, S, "
+                                        "Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n\n" +
+                                        "Let's try again! 🚀✨",
                                    previous_message=more_details_message,
                                    user=user)
+
     what_I_do_message.save()
 
     previous_message = what_I_do_message
@@ -268,28 +270,24 @@ class Message(models.Model):
 
             else:
                 category, logits, top_indices = MessageConfig.classifbert.classify_user_input(self.content)
-                print('logits', logits)
 
                 gate_name, initial_state_name, understood_question = MessageConfig.classifbert.process_user_question(
                     self.content, category)
 
-                print(logits)
-                print(category)
-
                 if logits[0][category] < 0.9 or gate_name == None:
                     previous_message = create_more_details_message(previous_message, self.user)
 
-
-                parameters = {"initial_state_name": initial_state_name, 'gate_name': gate_name,
-                                  'category': category}
-                parameters_json = json.dumps(parameters, sort_keys=True, indent=4)
-                ai_question_check = Message(content=understood_question,
-                                            previous_message=self,
-                                            user=self.user,
-                                            parameters=parameters_json
-                                            )
-                ai_question_check.save()
-                previous_message = ai_question_check
+                else:
+                    parameters = {"initial_state_name": initial_state_name, 'gate_name': gate_name,
+                                      'category': category}
+                    parameters_json = json.dumps(parameters, sort_keys=True, indent=4)
+                    ai_question_check = Message(content=understood_question,
+                                                previous_message=self,
+                                                user=self.user,
+                                                parameters=parameters_json
+                                                )
+                    ai_question_check.save()
+                    previous_message = ai_question_check
         else:
             super().save(*args, **kwargs)  # Save the new message
 

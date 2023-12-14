@@ -15,3 +15,5 @@
 1	draw the cnot
 2	apply the cnot on |11>
 1	draw a pauli x
+1	draw a pauli x
+2	Apply the Phase gate to the unity verctor

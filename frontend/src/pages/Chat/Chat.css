@@ -31,11 +31,13 @@
   /*color: #fff;*/
   text-align: right;
   white-space: pre-line;
+  tab-size: 4;
 }
 .ai-message {
   background-color: #f0f0f0;
   text-align: left;
   white-space: pre-line;
+  tab-size: 4;
 }
 .chatbot-input-form {
   display: flex;

@@ -41,8 +41,6 @@ const Chat = () => {
         console.log(`User created with ${userEmail}`)
       }
 
-      console.log(response.data.message); // Log the server response
-
       return response
     } catch (error) {
       console.error('Error during user creation:', error);
@@ -58,15 +56,12 @@ const Chat = () => {
                 password: 'iamapassword'
               })
 
-      console.log({response})
-
       if (response.status !== 200) {
         console.error('Failed to delete user:', response.statusText);
       } else {
         console.log(`User with ${userEmail} deleted`)
       }
 
-      console.log(response.data.message); // Log the server response
     } catch (error) {
       console.error('Error during user deletion:', error);
     }
@@ -169,7 +164,6 @@ const Chat = () => {
       .then((result) => {
         setInput("");
         setMessages([...messages, result.data]);
-        console.log(messages);
         fetchMessages();
       })
       .catch((error) => {
