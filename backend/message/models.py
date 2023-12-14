@@ -84,9 +84,11 @@ def create_more_details_message(previous_message, user):
     what_I_do_message = Message(content="Remember, you can ask me about:\n" +
                                         "1. Defining a quantum gate.\n" +
                                         "2. Drawing a quantum gate.\n" +
-                                        "3. Applying a quantum gate.\n" +
+                                        "3. Applying a quantum gate on a quantum state.\n" +
                                         "Gates include: Identity, Pauli, S, "
-                                        "Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n\n" +
+                                        "Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n" +
+                                        "States include: |0>, |1>, |+>, |->, |r>, |l>, |00>, |01>, |10>, |11>, |phi+>,"
+                                        " |phi->, |psi+>, |phi->. \n\n"
                                         "Let's try again! 🚀✨",
                                    previous_message=more_details_message,
                                    user=user)

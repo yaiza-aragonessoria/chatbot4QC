@@ -18,6 +18,7 @@ const Chat = () => {
       "2️⃣ Drawing a Quantum Gate.\n\n" +
       "3️⃣ Applying a Quantum Gate.\n\n" +
       "Gates include: Identity, Pauli, S, Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n\n" +
+      "States include: |0>, |1>, |+>, |->, |r>, |l>, |00>, |01>, |10>, |11>, |phi+>, |phi->, |psi+>, |phi->. \n\n" +
       "So, how can I help you? 🚀✨"
 
   // const token = localStorage.getItem("access");
