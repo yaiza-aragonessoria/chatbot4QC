@@ -17,3 +17,8 @@
 1	draw a pauli x
 1	draw a pauli x
 2	Apply the Phase gate to the unity verctor
+0	define a pauli x
+2	apply a phase gate of pi on |+>
+0	define the identity
+2	apply a phase gate of 4pi/3
+2	apply a phase gate of 4pi/3 on |+>
