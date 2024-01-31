@@ -222,7 +222,8 @@ pauli_y = Gate(name='Pauli y',
                n_qubits=1,
                definition='The Pauli Y gate is a single-qubit operation that rotates the qubit around the y axis by '
                           '\u03C0 radians.',
-               qiskit_name='y'
+               qiskit_name='y',
+               alternative_names=('pauliY',),
                )
 
 pauli_z = Gate(name='Pauli z',
@@ -230,7 +231,7 @@ pauli_z = Gate(name='Pauli z',
                definition='The Pauli Z gate is a single-qubit operation that rotates the qubit around the z axis by '
                           '\u03C0 radians.',
                qiskit_name='z',
-               alternative_names=('pauliY', 'phase flip', 'phase-flip',),
+               alternative_names=('pauliZ', 'phase flip', 'phase-flip',),
                )
 
 hadamard = Gate(name='Hadamard',
@@ -269,18 +270,30 @@ official_gates = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pau
 gate_for_names = {id.name: id, pauli_x.name: pauli_x, pauli_y.name: pauli_y, pauli_z.name: pauli_z, s.name: s,
                    sdg.name: sdg, hadamard.name: hadamard, phasePI2.name: phasePI2,
                    cnot.name: cnot, cz.name: cz, swap.name: swap, 'rotation': RXPI}
+
+print("gate_for_names", gate_for_names)
+print("pauli_y.name: pauli_y", pauli_y.name, pauli_y)
+
 gate_names = []
 gates = {}
+print("building gates")
 for gate_key in gate_for_names.keys():
+    print("gate_key", gate_key)
     gate = gate_for_names[gate_key]
     official_gate = official_gates[gate_key]
     gate_names.append(gate_key)
     gates[gate_key] = gate
     if gate.alternative_names:
+        print("gate.alternative_names", gate.alternative_names)
         gate_names.extend(gate.alternative_names)
+        print("gate_names", gate_names)
         for alternative_name in gate.alternative_names:
             gates[alternative_name] = official_gate
+            print("new append to gates:", gates[alternative_name], official_gate)
+    print("gates =", gates)
 gates['rotation'] = {'RX': RX, 'RY': RY, 'RZ': RZ}
+
+print("final gates from le", gates)
 
 initial_states = {'|0>': Statevector([1,0]),
                   '|1>': Statevector([0,1]),

@@ -1,0 +1,6 @@
+1	draw a pauli
+1	draw a pauli
+1	draw a pauli
+1	draw a pauli
+1	draw a pauli
+1	draw a hadamard

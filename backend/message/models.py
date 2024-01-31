@@ -85,7 +85,7 @@ def create_more_details_message(previous_message, user):
                                         "1. Defining a quantum gate.\n" +
                                         "2. Drawing a quantum gate.\n" +
                                         "3. Applying a quantum gate on a quantum state.\n" +
-                                        "Gates include: Identity, Pauli, S, "
+                                        "Gates include: Identity, Pauli X, Pauli Y, Pauli Z, S, "
                                         "Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n" +
                                         "States include: |0>, |1>, |+>, |->, |r>, |l>, |00>, |01>, |10>, |11>, |phi+>,"
                                         " |phi->, |psi+>, |phi->. \n\n"
@@ -272,6 +272,8 @@ class Message(models.Model):
 
             else:
                 category, logits, top_indices = MessageConfig.classifbert.classify_user_input(self.content)
+
+                print("logits", logits)
 
                 gate_name, initial_state_name, understood_question = MessageConfig.classifbert.process_user_question(
                     self.content, category)

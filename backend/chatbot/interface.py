@@ -235,7 +235,7 @@ class Chatbot:
 
     def process_user_question(self, user_question, category):
         # Find parameters related to the user's question
-        finder = ParameterFinder(self.gate_names, self.initial_states, max_distance=1)
+        finder = ParameterFinder(self.gate_names, self.initial_states, max_distance=0)
         parameters = finder.find_parameters(user_question)
         closest_gates = parameters['closest_gates']
         closest_initial_states = parameters['closest_initial_states']
@@ -371,8 +371,6 @@ class Chatbot:
                     phase_shift, angle, axis, gate_name, gate = self.handle_phase_or_rotation_question(gate_name,
                                                                                                        user_question)
                     # parameters = [phase_shift] if gate_name == 'phase' else [angle, axis]
-
-                print(self.apply_gate_method(category, gate, parameters))
 
 
 if __name__ == "__main__":

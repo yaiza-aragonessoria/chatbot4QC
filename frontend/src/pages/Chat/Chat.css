@@ -13,7 +13,7 @@
 .chatbot-messages {
   height: 400px;
   overflow-y: scroll;
-  padding: 8px;
+  /*padding: 8px;*/
 }
 .chatbot-messages p {
   display: flex;
@@ -23,7 +23,7 @@
   margin: 8px 0;
   padding: 8px;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
 }
 .user-message {
@@ -49,7 +49,7 @@
   padding: 8px;
   border: 1px solid #ccc;
   /*border-radius: 4px 0 0 4px;*/
-  font-size: 16px;
+  font-size: 14px;
 }
 .chatbot-input-form button {
   padding: 8px 16px;
@@ -57,7 +57,7 @@
   background-color: var(--color-green-pastel);
   /*color: #fff;*/
   border-radius: 0 4px 4px 0;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
 }
 .chatbot-input-form button:hover {
@@ -87,4 +87,9 @@
   color: darkgray;
   text-align: center;
   margin: 5px 0 0 0;
+}
+
+.logo_CI {
+  height: 30px;
+
 }

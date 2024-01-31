@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +17,7 @@ const Chat = () => {
       "1️⃣ Defining a Quantum Gate.\n" + "\n" +
       "2️⃣ Drawing a Quantum Gate.\n\n" +
       "3️⃣ Applying a Quantum Gate.\n\n" +
-      "Gates include: Identity, Pauli, S, Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n\n" +
+      "Gates include: Identity, Pauli X, Pauli Y, Pauli Z, S, Hadamard, Phase, Rotations, CNOT, CZ, SWAP.\n\n" +
       "States include: |0>, |1>, |+>, |->, |r>, |l>, |00>, |01>, |10>, |11>, |phi+>, |phi->, |psi+>, |phi->. \n\n" +
       "So, how can I help you? 🚀✨"
 
@@ -101,6 +101,16 @@ const Chat = () => {
     console.log("Deleting...")
       await api.delete(`/messages/${idMessage}/`);
     };
+
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages]);
 
   useEffect(() => {
     setMessages([])
@@ -186,39 +196,43 @@ const Chat = () => {
   };
 
   return (
-  <div className="chatbot-container">
-    <div className="chatbot-messages">
-      {messages.map((message, id) => (
-        <div
-          key={id}
-          className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-        >
-          {message.content}
-          {message.draw ? (
-            <p><img src={message.draw} alt="Draw" />
-            </p>) : null
-          }
+        <div className="chatbot-container">
+          <div>
+          <img className='logo_CI' src="/Constructor_Logo_Color_On_Transparent.png"/>
+          </div>
+          <div className="chatbot-messages">
+            {messages.map((message, id) => (
+              <div
+                key={id}
+                className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
+              >
+                {message.content}
+                {message.draw ? (
+                  <p><img src={message.draw} alt="Draw" />
+                  </p>) : null
+                }
+              </div>
+            ))}
+            <div ref={messagesEndRef}></div>
+          </div >
+          <div className="chatbot-menu">
+            <div className="refresh-button">
+              <button className='refresh-button' onClick={handleRefresh}><img src="/refresh.png" alt="Refresh Icon" /></button>
+            </div>
+            <form className="chatbot-input-form" onSubmit={handleSendMessage}>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your message..."
+              />
+              <button type="submit">Send</button>
+            </form>
+          </div>
+          <div className='version'>
+              version 0.1
+            </div>
         </div>
-      ))}
-    </div>
-    <div className="chatbot-menu">
-      <div className="refresh-button">
-        <button className='refresh-button' onClick={handleRefresh}><img src="/refresh.png" alt="Refresh Icon" /></button>
-      </div>
-      <form className="chatbot-input-form" onSubmit={handleSendMessage}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
-    <div className='version'>
-        version 0.1
-      </div>
-  </div>
 );
 };
 
