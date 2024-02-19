@@ -1,12 +1,10 @@
 import os
 
 import qiskit as qiskit
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from qiskit.quantum_info import Statevector
 import numpy as np
 import math
-import datetime
 import io
 
 
